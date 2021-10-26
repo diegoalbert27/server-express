@@ -17,13 +17,10 @@ app.set('port', process.env.PORT || PORT)
 app.use(cors())
 app.use(morgan('dev'))
 app.use(express.json())
+app.use(express.static('build'))
 
 app.use('/api/phonebook', phonebook)
 app.use('/api/notes', notes)
-
-app.get('/', (req, res) => {
-  res.send('Hello World')
-})
 
 app.get('/info', (req, res) => {
   const date = new Date()
