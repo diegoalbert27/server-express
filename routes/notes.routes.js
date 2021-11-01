@@ -1,16 +1,21 @@
 const express = require('express')
 const router = express.Router()
 
-let { notes } = require('../db.json')
+const Note = require('../models/Note.js')
 
 router.get('/', (req, res) => {
-  res.status(200).json(notes)
+  Note.find({})
+    .then(notes => res.status(200).json(notes))
 })
 
-router.get('/:id', (req, res) => {
+router.get('/:id', (req, res, next) => {
   const { id } = req.params
-  const note = notes.find(note => note.id === Number(id))
-  res.status(200).json(note)
+  Note.findById(id)
+    .then(note => {
+      if (note) return res.status(200).json(note)
+      res.status(404).end()
+    })
+    .catch(err => next(err))
 })
 
 router.post('/', (req, res) => {
@@ -22,43 +27,39 @@ router.post('/', (req, res) => {
     })
   }
 
-  const ids = notes.map(note => note.id)
-  const maxId = Math.max(...ids)
-
-  const newNote = {
-    id: maxId + 1,
+  const newNote = new Note({
     content: note.content,
-    date: new Date().toISOString(),
-    important: typeof note.important !== 'undefined' ? note.important : false
-  }
+    date: new Date(),
+    important: note.important || false
+  })
 
-  notes = [...notes, newNote]
-
-  res.status(201).json(newNote)
+  newNote.save()
+    .then(savedNote => res.status(201).json(savedNote))
+    .catch(err => console.log(err))
 })
 
-router.put('/:id', (req, res) => {
+router.put('/:id', (req, res, next) => {
   const { id } = req.params
   const { content, important } = req.body
 
-  notes = notes.filter(note => note.id !== Number(id))
-
-  const note = {
-    id: Number(id),
+  const newNoteInfo = {
     content,
-    date: new Date().toISOString(),
     important
   }
 
-  notes = notes.concat(note)
-
-  res.status(201).json(note)
+  Note.findByIdAndUpdate(id, newNoteInfo, { new: true })
+    .then(result => {
+      res.status(201).json(result)
+    })
+    .catch(err => next(err))
 })
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', (req, res, next) => {
   const { id } = req.params
-  notes = notes.filter(note => note.id !== Number(id))
-  res.status(204).end()
+
+  Note.findByIdAndDelete(id)
+    .then(() => res.status(204).end())
+    .catch(err => next(err))
 })
 
 module.exports = router
