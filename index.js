@@ -1,4 +1,4 @@
-require('dotenv').config({ path: 'ENV_FILENAME' })
+require('dotenv').config()
 require('./mongo')
 
 const path = require('path')
