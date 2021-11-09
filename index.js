@@ -1,6 +1,7 @@
-require('dotenv').config()
+require('dotenv').config({ path: 'ENV_FILENAME' })
 require('./mongo')
 
+const path = require('path')
 const Sentry = require('@sentry/node')
 const Tracing = require('@sentry/tracing')
 const express = require('express')
@@ -48,6 +49,7 @@ app.use(Sentry.Handlers.tracingHandler())
 
 app.use(express.json())
 app.use(express.static('build'))
+app.use('/images', express.static(path.join(__dirname, 'images')))
 
 app.use('/api/phonebook', phonebook)
 app.use('/api/notes', notes)
