@@ -53,4 +53,9 @@ router.delete('/:id', (req, res) => {
   res.status(204).end()
 })
 
+router.get('/info', (req, res) => {
+  const date = new Date()
+  res.send(`<p>Phonebook has info for ${persons.length} people</p><p>${date}</p>`)
+})
+
 module.exports = router

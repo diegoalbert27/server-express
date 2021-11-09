@@ -17,8 +17,6 @@ const notFound = require('./middleware/notFound.js')
 
 const PORT = 3001
 
-const { persons } = require('./db.json')
-
 // Configuration
 app.set('port', process.env.PORT || PORT)
 
@@ -53,11 +51,6 @@ app.use('/images', express.static(path.join(__dirname, 'images')))
 
 app.use('/api/phonebook', phonebook)
 app.use('/api/notes', notes)
-
-app.get('/info', (req, res) => {
-  const date = new Date()
-  res.send(`<p>Phonebook has info for ${persons.length} people</p><p>${date}</p>`)
-})
 
 app.use(notFound)
 
