@@ -20,26 +20,35 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res, next) => {
   const person = req.body
 
-  if (!person || !person.name || !person.number) {
-    return res.status(400).json({
-      error: 'person content is missing'
-    })
-  }
+  // if (!person || !person.name || !person.number) {
+  //   return res.status(400).json({
+  //     error: 'person content is missing'
+  //   })
+  //
 
-  Phonebook.find({ name: person.name })
-    .then(personPhone => {
-      if (personPhone.length === 0) {
-        const newPerson = new Phonebook({
-          name: person.name,
-          number: person.number
-        })
-        newPerson.save()
-          .then(personSaved => res.status(201).json(personSaved))
-          .catch(err => next(err))
-      } else {
-        res.status(400).json({ error: 'name must be unique' })
-      }
-    })
+  const newPerson = new Phonebook({
+    name: person.name,
+    number: person.number
+  })
+
+  newPerson.save()
+    .then(personSaved => res.status(201).json(personSaved))
+    .catch(err => next(err))
+
+  // Phonebook.find({ name: person.name })
+  //   .then(personPhone => {
+  //     if (personPhone.length === 0) {
+  //       const newPerson = new Phonebook({
+  //         name: person.name,
+  //         number: person.number
+  //       })
+  //       newPerson.save()
+  //         .then(personSaved => res.status(201).json(personSaved))
+  //         .catch(err => next(err))
+  //     } else {
+  //       res.status(400).json({ error: 'name must be unique' })
+  //     }
+  //   })
 })
 
 router.put('/:id', (req, res, next) => {
@@ -51,7 +60,7 @@ router.put('/:id', (req, res, next) => {
     number: person.number
   }
 
-  Phonebook.findByIdAndUpdate(id, newPerson, { new: true })
+  Phonebook.findByIdAndUpdate(id, newPerson, { new: true, runValidators: true, context: 'query' })
     .then(person => {
       res.status(201).json(person)
     })

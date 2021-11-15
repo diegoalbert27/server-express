@@ -1,7 +1,7 @@
-PUT http://localhost:3001/api/phonebook/618c322f758f11cac11c8193
+PUT http://localhost:3001/api/phonebook/618c4d302f3c845080f6ef60
 Content-Type: application/json
 
 {
-    "name": "El Dieguito",
+    "name": "PussyDestroyer",
     "number": "04121369393" 
 }

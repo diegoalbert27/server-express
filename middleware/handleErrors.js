@@ -5,6 +5,11 @@ const ERROR_HANDLERS = {
   defaultError: (res, error) => {
     console.error(error.name)
     res.status(500).end()
+  },
+
+  ValidationError: (res, error) => {
+    console.log(error.name)
+    res.status(400).json({ error: error.message })
   }
 }
 
