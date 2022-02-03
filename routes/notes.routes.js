@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const logger = require('./utils/logger')
 
 const Note = require('../models/Note.js')
 
@@ -35,7 +36,7 @@ router.post('/', (req, res) => {
 
   newNote.save()
     .then(savedNote => res.status(201).json(savedNote))
-    .catch(err => console.log(err))
+    .catch(err => logger.info(err))
 })
 
 router.put('/:id', (req, res, next) => {

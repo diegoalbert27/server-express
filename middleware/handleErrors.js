@@ -1,14 +1,15 @@
+const logger = require('./utils/logger')
 const ERROR_HANDLERS = {
   CastError: res =>
     res.status(400).send({ error: 'id used is malformed' }),
 
   defaultError: (res, error) => {
-    console.error(error.name)
+    logger.error(error.name)
     res.status(500).end()
   },
 
   ValidationError: (res, error) => {
-    console.log(error.name)
+    logger.info(error.name)
     res.status(400).json({ error: error.message })
   }
 }

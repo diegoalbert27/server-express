@@ -1,6 +1,7 @@
 require('dotenv').config()
 require('./mongo')
 
+const logger = require('./utils/logger')
 const path = require('path')
 const Sentry = require('@sentry/node')
 const Tracing = require('@sentry/tracing')
@@ -57,4 +58,6 @@ app.use(notFound)
 app.use(Sentry.Handlers.errorHandler())
 app.use(handleErrors)
 
-app.listen(app.get('port'), () => console.log(`server listening on port ${app.get('port')}`))
+const server = app.listen(app.get('port'), () => logger.info(`server listening on port ${app.get('port')}`))
+
+module.exports = { app, server }
